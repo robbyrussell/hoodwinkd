@@ -1,4 +1,6 @@
 require 'aes'
+require 'clean-html'
+require 'redcloth'
 require 'uri'
 
 module Hoodwinkd::Helpers
@@ -38,5 +40,9 @@ module Hoodwinkd::Helpers
     end
     def encrypt( token, salt, phrase )
         Aes.encrypt_buffer( 128, 'CBC', [token].pack("H*"), [salt].pack("H*"), phrase ).unpack("H*")[0]
+    end
+    def red( str ) 
+        html = RedCloth.new( str ).to_html
+        html.clean_html! 
     end
 end

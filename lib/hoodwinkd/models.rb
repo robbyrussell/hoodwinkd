@@ -64,7 +64,7 @@ Hoodwinkd::Models.schema do
         t.column :hoodwinkd_layer_id, :integer, :null => false
         t.column :permalink,  :string,  :limit => 192, :null => false
         t.column :winks,      :integer
-        t.column :posted_at,  :datetime
+        t.column :created_at, :datetime
         t.column :title,      :string,  :limit => 192
         t.column :first_wink, :integer, :null => false
         t.column :last_wink,  :integer, :null => false
@@ -98,6 +98,7 @@ Hoodwinkd::Models.schema do
         t.column :salt,           :string,  :limit => 40
         t.column :security_token, :string, :limit => 40
         t.column :token_expires,  :datetime
+        t.column :created_at,     :datetime
         t.column :activated_at,   :datetime
         t.column :deleted,        :integer, :default => 0
     end

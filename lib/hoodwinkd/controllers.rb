@@ -90,5 +90,34 @@ module Hoodwinkd::Controllers
                 END
             output_json(@winks)
         end
+
+        def post(domain, permalink)
+            @user = User.find_by_login input.hoodwink_login
+            @permalink = url_canonize(permalink, @env['QUERY_STRING'])
+            pass_in = decrypt( @user.security_token, input.hoodwink_passc )
+            if pass_in == decrypt( @user.salt, "#{ @user.security_token }#{ @user.salted_password }" )
+                @post = Post.find_by_sql [<<-END, domain, @permalink]
+                    SELECT p.* FROM posts p, layers l, sites s
+                    WHERE p.hoodwinkd_layer_id = l.id AND l.hoodwinkd_site_id = s.id
+                      AND s.domain = ? AND p.permalink = ?
+                END
+                unless @post
+                    @layer = 
+                        Site.find_by_domain(domain, :include => :layers).layers.detect do |l|
+                            @permalink =~ /#{ l.fullpost_url_match }/
+                        end
+                    @post = Post.create :hoodwinkd_layer_id => @layer.id, :permalink => @permalink,
+                        :winks => 0
+                end
+                html = red( input.hoodwink_writer )
+                @wink = Wink.create :hoodwinkd_post_id => @post.id, :hoodwinkd_user_id => @user.id,
+                    :comment_plain => input.hoodwink_writer, :comment_html => html
+                @post.winks += 1
+                @post.first_wink ||= @wink.id
+                @post.last_wink = @wink.id
+                @post.save
+                redirect "http://#{ domain }#{ permalink }"
+            end
+        end
     end
 end
