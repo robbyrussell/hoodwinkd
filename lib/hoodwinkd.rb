@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'camping'
 
+$:.unshift File.dirname(__FILE__)
 Camping.goes :Hoodwinkd
 
 DOMAIN = '[\w\-\.]+\.\w+'
