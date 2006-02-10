@@ -1,4 +1,6 @@
+require 'digest/md5'
 require 'json/objects'
+require 'open-uri'
 
 module Hoodwinkd::Models
     def self.schema(&block)
@@ -6,10 +8,45 @@ module Hoodwinkd::Models
         @@schema
     end
 
+    class Session < Base
+        belongs_to :user
+        serialize :ivars
+
+        def self.generate(cookies)
+            s = Session.create :hashid => Hash.rand
+            cookies.hoodwinkd_sid = s.hashid
+            s
+        end
+        def []=(k, v)
+            self.ivars ||= {}
+            self.ivars[k] = v
+        end
+        def [](k)
+            self.ivars[k] rescue nil
+        end
+    end
+
     class Hash < Base
+        def self.replenish
+            if count('used_at IS NULL') < 100
+                open( "http://random.org/cgi-bin/randbyte?nbytes=4096&format=hex" ) do |f|
+                    f.each do |line|
+                        Hash.create :hashid => line.gsub( /\s+/, '' )
+                    end
+                end
+            end
+        end
+        def self.reserve
+            replenish
+            hash = find :first, :conditions => "used_at IS NULL", :limit => "LIMIT 1"
+            hash.update_attributes( :used_at => Time.now )
+            hash
+        end
         def self.rand
-            hash = find :first, :conditions => "used_at = 0", :limit => "LIMIT 1"
+            replenish
+            hash = find :first, :conditions => "used_at IS NULL", :limit => "LIMIT 1"
             hash.destroy
+            hash.hashid
         end
     end
 
@@ -24,7 +61,6 @@ module Hoodwinkd::Models
     class LinkedSite < Site; end
     class GlobbedSite < Site; end
     class TemplateSite < Site; end
-    class AtomicSite < Site; end
 
     class Layer < Base
         belongs_to :site
@@ -33,10 +69,15 @@ module Hoodwinkd::Models
     end
 
     class User < Base
+        has_one  :session
         has_many :sites
         has_many :winks
         validates_uniqueness_of :login
         validates_uniqueness_of :email
+        validates_confirmation_of :password
+        validates_format_of :email, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+        validates_format_of :login, :with => /^[\w\-]+$/, 
+            :message => "should be letters, nums, dash, underscore only."
     end
 
     class Wink < Base
@@ -56,7 +97,7 @@ end
 Hoodwinkd::Models.schema do
     create_table :hoodwinkd_hashes, :force => true do |t|
         t.column :id,         :integer, :null => false
-        t.column :hash,       :string,  :limit => 32
+        t.column :hashid,     :string,  :limit => 32
         t.column :used_at,    :datetime
     end
     create_table :hoodwinkd_posts, :force => true do |t|
@@ -68,6 +109,13 @@ Hoodwinkd::Models.schema do
         t.column :title,      :string,  :limit => 192
         t.column :first_wink, :integer, :null => false
         t.column :last_wink,  :integer, :null => false
+    end
+    create_table :hoodwinkd_sessions, :force => true do |t|
+        t.column :id,          :integer, :null => false
+        t.column :hoodwinkd_user_id, :integer
+        t.column :hashid,      :string,  :limit => 16
+        t.column :created_at,      :datetime
+        t.column :ivars,           :text
     end
     create_table :hoodwinkd_sites, :force => true do |t|
         t.column :id,          :integer, :null => false
@@ -95,9 +143,7 @@ Hoodwinkd::Models.schema do
         t.column :email,          :string,  :limit => 64
         t.column :theme_url,      :string,  :limit => 80
         t.column :theme_css,      :string,  :limit => 80
-        t.column :salt,           :string,  :limit => 40
-        t.column :security_token, :string, :limit => 40
-        t.column :token_expires,  :datetime
+        t.column :security_token, :string,  :limit => 40
         t.column :created_at,     :datetime
         t.column :activated_at,   :datetime
         t.column :deleted,        :integer, :default => 0

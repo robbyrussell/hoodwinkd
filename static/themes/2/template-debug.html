@@ -1,0 +1,20 @@
+<div id="hoodwinkdDebug">
+    <h1>${domain}</h1>
+    <h2>hoodwink'd debugging window | <a href="http://hoodwink.d/dial/site/${domain}">edit</a></h2>
+    {for site in sites}
+    {if site.hoodlink}
+        <h3>${site.name} Settings</h3>
+        <p>URL: <code>${site.hoodlink}</code><br />
+        Is Summary? <strong>${% site.is_summary ? 'Y' : 'N' %}</strong> / 
+        Is Full Post? <strong>${% site.is_fullpost ? 'Y' : 'N' %}</strong><br />
+        {if site.is_summary}
+        XPath: <strong>${site.summary_eles}</strong> summaries containing <strong>${site.summary_links}</strong> permalinks.
+        {/if}
+        {if site.is_fullpost}
+        XPath: <strong>${site.fullpost_eles}</strong> full posts containing <strong>${site.fullpost_links}</strong> permalinks.
+        {/if}
+        </p>
+    {/if}
+    {/for}
+    <h4><a href="javascript:void(document.getElementById('hoodwinkdDebug').style.display = 'none');">close</a> | <a href="http://wasteland.hobix.com/The%20Now/Hoodwink.d%201.6%20is%20Here">theming howto</a> | <a href="http://trimpath.com/project/wiki/JavaScriptTemplateSyntax">syntax</a></h4>
+</div>

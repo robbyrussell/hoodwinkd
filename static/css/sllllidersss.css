@@ -1,0 +1,95 @@
+body {
+  background: #381913 url(/i/hoodwinkd-backpixel.png);
+  margin: 0; padding: 0;
+  text-align: center;
+}
+#shade {
+    background: url(/i/hoodwinkd-backtile.png) top center repeat-x;
+    left: 0; top: 0;
+    position: static;
+    width: 100%;
+}
+#hood {
+  background: #381913 url(/i/hoodwinkd-back.png) top left no-repeat;
+  width: 648px;
+  height: 720px;
+  margin: 0 auto;
+  font-family: verdana, arial, sans-serif;
+}
+#red, #blue {
+  position: absolute;
+  padding-top: 84px;
+  padding-left: 141px;
+}
+* html #red, * html #blue {
+  top: 0; left: 122px;
+}
+#content {
+  position: absolute;
+  padding-top: 264px;
+  padding-left: 141px;
+  width: 345px;
+}
+* html #content {
+  top: 8px; left: 122px;
+}
+#fixer {
+    height: 192px;
+}
+.stretcher {
+  text-align: left;
+  color: #987;
+  font-size: 10px;
+  background: none !important;
+}
+.stretcher p {
+    margin: 7px 8px; padding: 0;
+}
+p a:link, p a:visited {
+    color: #c97;
+}
+h3 {
+    background: url(/i/hoodwinkd-strip1.png) no-repeat;
+    margin: 8px 0 0;
+    padding: 1px 0 0;
+    height: 24px;
+    width: 345px;
+    cursor: pointer;
+    font-size: 0.99em;
+}
+h3 a:link, h3 a:visited {
+	color: #674;
+	padding: 2px 8px 1px;
+	-moz-outline-style: none;
+    display: inline;
+	width: 330px;
+	text-decoration: none;
+}
+fieldset { border: none; padding: 0; margin: 0; }
+form div.optional, form div.required {
+    clear: left;
+    display: block;
+    width: 334px;
+    height: expression('1%');
+    margin: 5px 0px 0px 0px;
+    padding: 1px 3px;
+}
+form div label {
+    display: block;
+    float: left;
+    width: 70px;
+    padding: 3px 5px;
+    margin: 0px 0px 5px 0px;
+    text-align: right;
+}
+input.submit {
+    background: #904 !important;
+    border: none;
+    margin-top: 4px;
+}
+input.submit:hover {
+    background: #301 !important;
+    color: #900
+}
+.submits { padding: 5px 0px 0px 84px; }
+.alert { color: #f90; }

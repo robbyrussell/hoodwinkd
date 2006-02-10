@@ -23,26 +23,30 @@ module Hoodwinkd::Helpers
         str
     end
     def js_time( unixt, fmt = "%d %b %Y at %I:%M:%S %p" )
-        %{
-            <script type="text/javascript">
-                document.write((new Date(#{unixt.to_i * 1000})).strftime(#{fmt.dump}));
-            </script>
-            <noscript>
-                #{Time.at(unixt.to_i).strftime(fmt)}
-            </noscript>
-        }
+        %{<script type="text/javascript">
+              document.write((new Date(#{unixt.to_i * 1000})).strftime(#{fmt.dump}));
+          </script><noscript>
+              #{Time.at(unixt.to_i).strftime(fmt)}
+          </noscript>}
     end
     def num( str )
         str.gsub(/(.)(?=.{3}+$)/, %q(\1,))
     end
-    def decrypt( token, ct )
-        Aes.decrypt_block( 128, 'CBC', [token].pack("H*"), [ct[0,32]].pack("H*"), [ct[32,32]].pack( "H*" ) ).sub( /(.|\n)(\1*)\Z/, '' )
+    def decrypt( token, enc )
+        Aes.decrypt_block( 128, 'CBC', [token].pack("H*"), [SALT].pack("H*"), [enc].pack( "H*" ) ).sub( /(.|\n)(\1*)\Z/, '' )
     end
-    def encrypt( token, salt, phrase )
-        Aes.encrypt_buffer( 128, 'CBC', [token].pack("H*"), [salt].pack("H*"), phrase ).unpack("H*")[0]
+    def encrypt( token, phrase )
+        Aes.encrypt_buffer( 128, 'CBC', [token].pack("H*"), [SALT].pack("H*"), phrase ).unpack("H*")[0]
     end
-    def red( str ) 
+    def red( str, post_process = nil ) 
+        if spc = str[/^([ \t]*)\S/, 1]
+            str.gsub!(/^#{spc}/, '')
+        end
         html = RedCloth.new( str ).to_html
-        html.clean_html! 
+        if post_process 
+            html.__send__(post_process)
+        else
+            html
+        end
     end
 end

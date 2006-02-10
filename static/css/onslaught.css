@@ -1,0 +1,80 @@
+body {
+    font-family: verdana, arial, sans-serif;
+}
+#header {
+    background: url(/i/onslaught-clouds.png) no-repeat;
+    padding: 232px 0px 0px 273px;
+    width: 247px;
+    height: 202px;
+    float: left;
+    text-align: center;
+}
+#header h1 { width: 228px; font-size: 27pt; margin: 0; color: #961; background-color: transparent; line-height: 100%; }
+#header h2 { width: 228px; font-size: 14pt; margin: 0; color: #411; background-color: transparent; line-height: 100%; border-bottom: solid 1px #ccf; padding-bottom: 8px; }
+#header h3 { width: 228px; font-size: 14pt; margin: 0; color: #A71; background-color: transparent; line-height: 100%; border-top: solid 1px #ccf; padding-top: 8px; }
+#header form { padding: 24px 8px; text-align: left; }
+#sidebar { width: 190px; float: right; padding-top:40px; }
+#sidebar li { clear: both; }
+form label { display: block; font-size: 12pt; font-weight: bold; }
+form input { padding: 1px 2px; margin: 0; float: left; font-size: 13pt; }
+#q { width: 180px; }
+form img { display: block; float: left; margin: 2px 0px 0px 4px; }
+#feed { float: right: padding: 10px 0; text-align: right; width: 24px; }
+#results { clear: both; }
+.board { width: 240px; float: left; padding-right: 10px; }
+.board ul li { clear: both; }
+.board h2 { font-size: 15pt; text-align: center; }
+.wide ul, .wide ol {
+    width: 260px;
+}
+.wink .permalink {
+    font-size: 120%;
+}
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+ol {
+    margin: 0;
+    padding: 0;
+    padding-left: 30px;
+}
+li {
+    border-top: dotted 1px #cce;
+    padding: 4px 0px;
+    margin-right: 8px;
+}
+ul li {
+    clear: both;
+}
+ol li {
+    float: left;
+    width: 112px;
+}
+#footer ul {
+    padding: 10px 0px;
+}
+#footer li {
+    clear: none;
+    border: none;
+    width: 202px;
+    float: left;
+    height: 72px;
+    padding-right: 20px;
+}
+#footer li a,
+#footer li a:hover,
+#footer li a:visited
+{
+    color: #efe5e5;
+}
+#footer li .winks
+{
+    color: #333;
+}
+#footer li .fade 
+{
+    background-color: #034;
+    color: #c1d1ff;
+}

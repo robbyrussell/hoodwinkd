@@ -1,0 +1,261 @@
+body {
+  color: #333;
+  margin: 0; padding: 0;
+  margin-bottom: 70px;
+  text-align: center;
+  font-family: verdana, arial, sans-serif;
+  font-size: 13px;
+}
+h1 {
+  font-size: 24px;
+  font-family: Utopia, georgia, serif;
+  font-weight: normal;
+}
+h2 {
+  font-family: Utopia, georgia, serif;
+  color: #963;
+  padding: 2px;
+  clear: both;
+  font-size: 18px;
+  font-weight: normal;
+}
+#shade {
+    background: url($R(Static, '/i/winker-satellite.jpg')) 3px 20px no-repeat;
+    min-height: 360px;
+    position: static;
+    width: 460px;
+    padding-left: 260px;
+    margin-left: 70px;
+}
+#header {
+    text-align: right;
+    height: 18px;
+}
+#content {
+    text-align: left;
+}
+#header .menu {
+    float: right;
+    background-color: white;
+    border-left: dotted 1px #ccc;
+    border-bottom: dotted 1px #ccc;
+    margin-right: -1px;
+}
+#header .menu ul {
+    list-style: none;
+    margin: 0; padding: 0;
+    font-weight: bold;
+}
+#header .menu ul li {
+    float: left;
+    padding: 4px 6px;
+    border-right: dotted 1px #ccc;
+}
+#currentSites {
+    float: left;
+    padding-right: 18px;
+    padding-bottom: 80px;
+    width: 420px;
+}
+#pendingSites {
+    width: 360px;
+    padding-left: 12px;
+    padding-bottom: 80px;
+    float: left;
+}
+#pendingSites small, #pendingSites dt {
+    padding: 2px;
+    color: #553;
+    background-color: #e1f1ff;
+    font-size: 9pt;
+    font-weight: bold;
+}
+#pendingSites .detail {
+    float: right;
+}
+#pendingSites li {
+    clear: both;
+    padding-top: 3px;
+    padding-bottom: 6px;
+    border-bottom: dotted 1px black;
+}
+
+/* form */
+{
+    clear: left;
+}
+form {
+    margin: 0px;
+    padding: 0px;
+    font-size: 100%;
+}
+
+form fieldset {
+font-size: 100%;
+border-color: #999;
+border-width: 1px 0px 0px 0px;
+border-style: solid none none none;
+padding: 10px;
+margin: 0px 0px 0px 0px;
+}
+
+form fieldset.login {
+    border: none;
+    font-size: 10pt;
+}
+
+form fieldset.unruled {
+    border: none;
+}
+
+.alert {
+    background-color: #FD9;
+    font-weight: bold;
+    color: #333;
+    padding: 4px;
+}
+
+form fieldset legend {
+    font-size: 150%;
+    font-weight: normal;
+    color: #000000;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 5px;
+}
+
+label {
+font-size: 100%;
+display: block;
+float: left;
+width: 90px;
+padding: 3px 5px;
+margin: 0px 0px 5px 0px;
+text-align: right;
+}
+
+label u {
+font-style: normal;
+text-decoration: underline;
+}
+
+form div input[type="text"], form div input[type="password"], select, form div textarea {
+width: 220px;
+padding: 1px 3px;
+margin: 0px 0px 0px 0px;
+}
+
+form div textarea {
+width: 300px;
+}
+
+input, select, textarea {
+font-family: Tahoma, Arial, sans-serif;
+font-size: 100%;
+color: #000000;
+}
+
+textarea {
+overflow: auto;
+}
+
+form div.optional, form div.required {
+clear: left;
+display: block;
+width: 414px;
+height: expression('1%');
+margin: 5px 0px 0px 0px;
+padding: 1px 3px;
+}
+form div small {
+    display: block;
+    margin: 0px 0px 5px 102px;
+    padding: 1px 3px;
+    font-size: 88%;
+    height: expression('1%');
+}
+
+
+fieldset input[type="submit"] {
+    width: 140px;
+    padding: 0px 0px 0px 0px;
+    margin-left: 0px;
+}
+.rule { 
+    clear: both;
+    width:100%; 
+    height: 8px; 
+    margin-bottom: 8px; 
+    background: url($R(Static, '/i/hoodwink-fullpost-rule.png'));
+}
+#pendingSites ul {
+    list-style: none;
+    margin: 0; padding: 0;
+}
+.owned {
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 4px;
+}
+.notOwned {
+    font-size: 16px;
+    font-weight: bold;
+    padding-bottom: 4px;
+}
+a.button {
+    font-size: 11px;
+    background: url($R(Static, '/i/hoodwink-fullpost-rule.png'));
+    padding: 2px 4px;
+    line-height: 160%;
+}
+#currentSites ol li {
+    float: left;
+    width: 117px;
+}
+li .summary {
+    font-size: 13px;
+}
+#settingTabs {
+background: url($R(Static, '/i/hoodwink-fullpost-tile.png'));
+border: solid 1px #333;
+}
+
+#settingTabs h3 {
+float: left;
+margin: 11px 5px 4px 5px;
+}
+
+#settingTabs ul {
+white-space: nowrap;
+margin:0px;
+padding:8px 0px 3px 5px;
+}
+
+#settingTabs li {
+display: inline;
+list-style-image: none;
+list-style-type: none;
+padding: 4px;
+margin: 0px 2px 0px 0px;
+}
+
+#settingTabs li.off {
+background-color: #e5e5e5;
+border: solid 1px #333;
+border-bottom: 0;
+}
+
+#settingTabs li.on {
+background-color: white;
+border: solid 1px #333;
+border-bottom: solid 1px white;
+font-size: 12pt;
+padding: 5px;
+}
+#settingTabs a {
+color: #a29;
+font-weight: bold;
+text-decoration: none;
+}
+#settingTabs a:hover {
+color: #a90;
+}

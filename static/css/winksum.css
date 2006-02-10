@@ -1,0 +1,33 @@
+.summary {
+    font-size: 13px;
+}
+.mini {
+    font-size: 10px;
+}
+.detail {
+    clear: both;
+}
+.winks {
+    float: left;
+    background: url(http://hoodwink.d/i/hoodwink-summary.png) no-repeat;
+    padding: 2px 8px 6px 8px;
+    text-align: right;
+    margin: 0px 4px; 
+    font: bold 11px/12px verdana, arial, sans-serif;
+    width: 38px;
+}
+.fade {
+    background-color: #f5f5f0;
+    padding: 2px;
+    font: normal 11px/12px verdana, arial, sans-serif;
+    color: #777;
+}
+.date {
+    padding: 2px;
+    font: bold 10px/11px verdana, arial, sans-serif;
+    color: #997;
+}
+.attrib {
+    font: normal 11px/12px verdana, arial, sans-serif;
+    padding: 2px;
+}

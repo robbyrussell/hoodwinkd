@@ -1,6 +1,3 @@
-
-DOMAIN = '[^/]+\.[\w\-]+'
-
 module Hoodwinkd::Controllers
     class Setup < R "/(#{DOMAIN})/setup"
         def get(domain)
@@ -117,6 +114,21 @@ module Hoodwinkd::Controllers
                 @post.last_wink = @wink.id
                 @post.save
                 redirect "http://#{ domain }#{ permalink }"
+            end
+        end
+    end
+
+    class Static < R '/static/(.+)'
+        def get(path)
+            path = File.join(STATIC, path.gsub(/\.+/, '.'))
+            if File.exists? path
+                type = MIME_TYPES[path[/\.\w+$/, 0]] || "text/plain"
+                @headers['Content-Type'] = type
+                src = File.read(path)
+                if type =~ %r!^text/!
+                    src.gsub!(/\$(R\(.+?\))/) { eval($1) }
+                end
+                src
             end
         end
     end

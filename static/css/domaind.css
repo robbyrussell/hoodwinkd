@@ -1,0 +1,112 @@
+body { margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
+a:hover { color: #F03; }
+#page {
+    width: 730px;
+    margin: 0 auto;
+} 
+#banner {
+    background-color: #cdd;
+    padding: 10px 8px 31px 8px;
+}
+h1, h2, h3, h4, h5, h6 { font-family: Utopia, Georgia, serif; }
+h2, h3, h4, h5, h6 { font-weight: normal; margin: 0; }
+h1 {
+    color: white;
+    font-size: 22pt;
+    margin: 4px 0 2px 0;
+    padding-top: 19px;
+}
+h2 {
+    font-size: 21pt;
+}
+h3 {
+    color: #646;
+    font-size: 12pt;
+}
+h4 {
+    color: #990;
+    font-size: 10pt;
+}
+#menu {
+    background-color: #DFA;
+    padding: 2px 4px;
+    border-bottom: solid 1px #CC0;
+}
+#menu a, #menu a:visited, #menu a:active, #menu a:link {
+    color: #F0A;
+    font-size: 9pt;
+    font-weight: bold;
+}
+#banner h1, #banner h3, #banner h4 {
+    text-align: right;
+    width: 520px;
+}
+#subscribe { float: left; }
+#logo { float: right; }
+#content {
+    border-top: solid 1px #F97;
+}
+#blog {
+    padding: 12px 0px;
+    width: 540px;
+    float: left;
+}
+#blog .entry {
+    margin: 8px 20px;
+}
+#blog .entry .footer {
+    font-size: 8pt;
+    color: #995;
+    clear: both;
+    border-top: solid 1px #953;
+    background-color: #eed;
+    padding: 2px 4px;
+    text-align: right;
+}
+#blog .entry .body {
+    color: #443;
+    margin: 4px 20px;
+}
+#blog .entry .body h1 { color: #553; font-size: 18pt; font-weight: normal; }
+#blog .entry .body h2 { color: #553; font-size: 16pt; font-weight: normal; }
+#blog .entry .body h3 { color: #553; font-size: 15pt; font-weight: normal; }
+#blog .entry .body h4 { color: #553; font-size: 14pt; font-weight: normal; }
+#blog .entry .body h5 { color: #553; font-size: 13pt; font-weight: normal; }
+#blog .entry .body,
+#blog .entry .body p  { color: #553; font-size: 10pt; font-weight: normal; }
+h3.title {
+    font-size: 17pt;
+    line-height: 110%;
+}
+#sidebar {
+    padding: 12px 9px;
+    width: 167px;
+    float: left;
+}
+#sidebar h2 {
+    font-size: 16pt;
+}
+#sidebar .box {
+    font-size: 9pt;
+    margin-bottom: 12px;
+}
+#sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#sidebar li {
+    clear: both;
+    padding: 8px 2px;
+}
+#footer {
+    color: #c9d3e5;
+    clear: both;
+    border-top: solid 3px #234;
+    background-color: #057;
+    padding: 9px 12px;
+}
+#footer h3 {
+    color: #e9f3e5;
+    font-size: 20pt;
+}

@@ -1,0 +1,50 @@
+<div id="hoodwinkFullposts">
+{if user.version != 1.821}
+<div class="alert">
+<p><strong>Hoodwink'd 1.8.2b is out!</strong> Please take a moment <a href="http://hoodwink.d/jsx/hoodwinkd.user.js">to upgrade</a>.  This version fixes the problems with plunder'd URLs we're seeing on Google and Wasteland.</p>
+</div>
+{/if}
+<a name='hoodwinks'></a>
+<div class='hoodwinkHeader'>
+<div class='hoodwinkTotal'><p>${winks.length} others have commented.</p>
+<p><a href='#hoodwinkNew'>Click here</a> to reply.</p></div>
+<div class='hoodwinkIcon'><img src='http://hoodwink.d/i/hoodwink-fullpost-icon.png' /></div>
+<h2 class='hoodwinkTitle'>hoodwink'd</h2></div><div class='hoodwinkContents'>
+
+{for wink in winks}
+{if wink.user}
+    <a name="${wink.user}@${% wink.created_time.getTime()/1000 %}"></a>
+    <div class='hoodwinkPost'>
+        <div class='hoodwinkAttrib'>
+            <h3 class='hoodwinkAuthor'>${wink.user}</h3>
+            <h4 class='hoodwinkTime'>said on ${wink.created_time.strftime("%d %b %Y at %I:%M:%S %p")}</h4>
+        </div>
+        <div class='hoodwinkContour'><div class='hoodwinkContent'>${wink.comment}</div></div>
+    </div>
+{/if}
+{/for}
+
+</div>
+<div id='hoodwinkContainer'>
+<a name='hoodwinkNew'></a>
+<form name='hoodwinkd' method='POST' action='http://hoodwink.d/${user.domain}/wink${hoodlink}'
+    onSubmit='this.elements["hoodwink_passc"].value = byteArrayToHex(rijndaelEncrypt(this.elements["hoodwink_pass"].value,hexToByteArray("${user.key}"),"CBC")); 
+              this.elements["hoodwink_pass"].value = ""; return this.submit();'>
+<input type='hidden' name='hoodwink_passc' value='' />
+<input type='hidden' name='hoodwink_login' value='${user.login}' />
+<fieldset><legend>post a comment</legend><div class='required'>
+    <label for='hoodwink_login'>name:</label>
+    <input type='text' name='hoodwink_login' value='${user.login}' disabled='true' />
+</div><div class='required'>
+    <label for='hoodwink_pass'>password:</label>
+    <input type='password' name='hoodwink_pass' value='' />
+</div><div class='required'>
+    <label for='hoodwink_writer'>comment:</label>
+    <textarea name='hoodwink_writer' rows='12'></textarea>
+</div>
+<input type='button' onClick='window.open( "http://hoodwink.d/${user.domain}/preview?u=${user.login}&amp;c="+escape(this.form.elements["hoodwink_writer"].value ), 
+    "hWP", "height=400,width=400,channelmode=0,dependent=0,directories=0,fullscreen=0,location=0,menubar=0,resizable=0,scrollbars=1,status=1,toolbar=0","pop" );' value='preview' />
+<input type='submit' name='winkNOW' value='post this wink' /></fieldset></form>
+<div class='hoodwinkRule'></div>
+</div>
+</div>
