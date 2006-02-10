@@ -23,7 +23,7 @@ module Hoodwinkd::Controllers
             end
             @posts =
                 Post.find_by_sql([<<-END] + conditions[1..-1])
-                    SELECT p.permalink, p.title, p.winks, 
+                    SELECT p.permalink, p.title, p.wink_count AS count, 
                            f.created_at AS started_at, fu.login AS started_by,
                            e.created_at AS ended_at, eu.login AS ended_by
                     FROM hoodwinkd_posts p, hoodwinkd_sites s, hoodwinkd_layers l, 
@@ -31,8 +31,8 @@ module Hoodwinkd::Controllers
                          hoodwinkd_winks e, hoodwinkd_users eu
                     WHERE #{conditions[0]} AND s.id = l.hoodwinkd_site_id
                       AND l.id = p.hoodwinkd_layer_id 
-                      AND f.id = p.first_wink AND fu.id = f.hoodwinkd_user_id
-                      AND e.id = p.first_wink AND eu.id = e.hoodwinkd_user_id
+                      AND f.id = p.first_wink_id AND fu.id = f.hoodwinkd_user_id
+                      AND e.id = p.first_wink_id AND eu.id = e.hoodwinkd_user_id
                     ORDER BY e.created_at DESC
                 END
             output_json(@posts) do |post|
@@ -50,16 +50,17 @@ module Hoodwinkd::Controllers
             end
             @posts =
                 Post.find_by_sql [<<-END] + conditions[1..-1]
-                    SELECT p.permalink, p.winks, e.created_at AS ended_at
+                    SELECT p.permalink, p.wink_count AS count, e.created_at AS ended_at
                     FROM hoodwinkd_posts p, hoodwinkd_sites s, hoodwinkd_layers l, 
                          hoodwinkd_winks e
                     WHERE #{conditions[0]} AND s.id = l.hoodwinkd_site_id
                       AND l.id = p.hoodwinkd_layer_id 
-                      AND e.id = p.first_wink
+                      AND e.id = p.first_wink_id
                     ORDER BY e.created_at DESC #{limit}
                 END
-            output_json(@posts) do |post|
+            output_json(@posts, {}) do |post|
                 post['ended_at'] = time_coerce(post['ended_at'])
+                {post.delete('permalink') => post}
             end
         end
     end
@@ -91,10 +92,10 @@ module Hoodwinkd::Controllers
         def post(domain, permalink)
             @user = User.find_by_login input.hoodwink_login
             @permalink = url_canonize(permalink, @env['QUERY_STRING'])
-            pass_in = decrypt( @user.security_token, input.hoodwink_passc )
-            if pass_in == decrypt( @user.salt, "#{ @user.security_token }#{ @user.salted_password }" )
-                @post = Post.find_by_sql [<<-END, domain, @permalink]
-                    SELECT p.* FROM posts p, layers l, sites s
+            pass_in = decrypt( @user.security_token, input.hoodwink_passc[32,32], input.hoodwink_passc[0,32] )
+            if pass_in == decrypt( @user.security_token, @user.password )
+                @post = Post.find_by_sql([<<-END, domain, @permalink]).first
+                    SELECT p.* FROM hoodwinkd_posts p, hoodwinkd_layers l, hoodwinkd_sites s
                     WHERE p.hoodwinkd_layer_id = l.id AND l.hoodwinkd_site_id = s.id
                       AND s.domain = ? AND p.permalink = ?
                 END
@@ -104,14 +105,16 @@ module Hoodwinkd::Controllers
                             @permalink =~ /#{ l.fullpost_url_match }/
                         end
                     @post = Post.create :hoodwinkd_layer_id => @layer.id, :permalink => @permalink,
-                        :winks => 0
+                        :wink_count => 0
                 end
                 html = red( input.hoodwink_writer )
                 @wink = Wink.create :hoodwinkd_post_id => @post.id, :hoodwinkd_user_id => @user.id,
                     :comment_plain => input.hoodwink_writer, :comment_html => html
-                @post.winks += 1
-                @post.first_wink ||= @wink.id
-                @post.last_wink = @wink.id
+                @post.wink_count += 1
+                unless @post.first_wink_id
+                    @post.first_wink_id = @wink.id
+                end
+                @post.last_wink_id = @wink.id
                 @post.save
                 redirect "http://#{ domain }#{ permalink }"
             end

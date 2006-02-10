@@ -77,8 +77,10 @@ module Hoodwinkd::Controllers
         end
     end
 
-    class DialUserJs < R '/dial/user.js'
+    class DialUserJs < R '/dial/hoodwinkd.user.js'
         def get
+            @headers['Content-Type'] = 'text/javascript'
+            ::ERB.new( File.read("#{STATIC}/src/hoodwinkd.user.js") ).result(binding)
         end
     end
 
@@ -106,7 +108,7 @@ module Hoodwinkd::Controllers
                 if @input.password == decrypt( user.security_token, user.password )
                     @user = user
                     @session.hoodwinkd_user_id = @user.id
-                    redirect DialProfile
+                    redirect DialWelcome
                     return
                 else
                     @user.errors.add(:password, 'is incorrect')
@@ -128,7 +130,7 @@ module Hoodwinkd::Controllers
                 @user.password_confirmation = nil
                 @user.save!
                 @session.hoodwinkd_user_id = @user.id
-                redirect DialProfile
+                redirect DialWelcome
             else
                 render :dial, "register", :register
             end

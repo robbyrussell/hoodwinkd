@@ -88,9 +88,9 @@ module Hoodwinkd::Models
     class Post < Base
         belongs_to :layer
         has_many :winks
-        has_one :first_wink, :class_name => Wink.name
-        has_one :last_wink, :class_name => Wink.name
-        validates_uniqueness_of :permalink, :scope => 'hoodwinkd_site_id'
+        has_one :first_wink, :class_name => Wink.name, :foreign_key => 'first_wink_id'
+        has_one :last_wink, :class_name => Wink.name, :foreign_key => 'last_wink_id'
+        validates_uniqueness_of :permalink, :scope => 'hoodwinkd_layer_id'
     end
 end
 
@@ -104,11 +104,11 @@ Hoodwinkd::Models.schema do
         t.column :id,         :integer, :null => false
         t.column :hoodwinkd_layer_id, :integer, :null => false
         t.column :permalink,  :string,  :limit => 192, :null => false
-        t.column :winks,      :integer
+        t.column :wink_count, :integer
         t.column :created_at, :datetime
         t.column :title,      :string,  :limit => 192
-        t.column :first_wink, :integer, :null => false
-        t.column :last_wink,  :integer, :null => false
+        t.column :first_wink_id, :integer
+        t.column :last_wink_id,  :integer
     end
     create_table :hoodwinkd_sessions, :force => true do |t|
         t.column :id,          :integer, :null => false
