@@ -11,7 +11,6 @@ module Hoodwinkd::Helpers
             ary.inject(base) do |hsh, row|
                 row = row.attributes
                 hsh.merge!(yield(row))
-                p [hsh, row]
                 hsh
             end.to_json
         else

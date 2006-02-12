@@ -711,8 +711,8 @@ var TrimPath;
 
         login: "<%= @user.login %>", key: "<%= @user.security_token %>",
         css: '', version: 1.821,
-        theme: 'http://<%= @env.HTTP_HOST + R(Static, "/themes/1/") %>',
-        server: 'http://<%= @env.HTTP_HOST + self/"" %>',
+        theme: '<%= URL(Static, "themes/1/") %>',
+        server: '<%= self.URL %>',
 
         // load site information
         d: function ( loc ) {
@@ -737,9 +737,9 @@ var TrimPath;
                 site['permalinks'] = this.permascan( site );
                 site['is_fullpost'] = ( !site['is_summary'] && site['hoodlink'].match( site['archive_re'] ) );
                 if ( site['permalinks'] )
-                    this.jget( "/" + this.domain + "/winksum", 'index_html', site );
+                    this.jget( this.domain + "/winksum", 'index_html', site );
                 if ( site['is_fullpost'] )
-                    this.jget( "/" + this.domain + "/wink" + site['hoodlink'], 'archive_html', site );
+                    this.jget( this.domain + "/wink" + site['hoodlink'], 'archive_html', site );
                 this.sites.push(site);
             }
             this.injectDebug();
@@ -847,7 +847,7 @@ var TrimPath;
             var permabrother = null;
             var tmpl = TrimPath.parseTemplate(GM_getValue('template:winksall'));
             this.injectCSS( site['css'] );
-            this.injectScript( 'http://<%= @env.HTTP_HOST + R(Static, "/js/rijndael.js") %>' );
+            this.injectScript( '<%= URL(Static, "js/rijndael.js") %>' );
             posts = this.xp( site['fullpost_xpath'], document );
             site['fullpost_eles'] = posts.snapshotLength;
             for (var i=0; i<posts.snapshotLength; i++)
@@ -887,7 +887,7 @@ var TrimPath;
         jget: function ( url, callback, params ) {
             var self = this;
             GM_xmlhttpRequest({
-                method: 'GET', url: "http://<%= @env.HTTP_HOST + self/"" %>" + url,
+                method: 'GET', url: "<%= self.URL %>" + url,
                 // headers: {'Content-type': 'application/x-json'},  // tickles GM+prototype conflict
                 // data: ( obj == null ? null : JSON.stringify( obj ) ),
                 onload: function(e) { eval('var obj = ' + e.responseText); self[callback](obj, params); }
@@ -969,7 +969,7 @@ var TrimPath;
 
         loadSupport: function () {
             GM_xmlhttpRequest({
-                method: 'GET', url: 'http://<%= @env.HTTP_HOST + R(Static, "js/support.js") %>',
+                method: 'GET', url: '<%= URL(Static, "js/support.js") %>',
                 onload: function(e) { 
                     eval( e.responseText );
                 }
@@ -979,7 +979,7 @@ var TrimPath;
         configyure: function (templates) {
             var loaded = GM_getValue("loaded");
             if ( typeof(loaded) != 'undefined' && loaded == this.theme + ";" + (new Date()).getHours() ) {
-                this.jget( "/" + this.domain + "/setup?v=2", 'start' );
+                this.jget( this.domain + "/setup?v=2", 'start' );
                 return;
             }
             var hw = this;
@@ -996,7 +996,7 @@ var TrimPath;
                     }
                     GM_setValue("template:" + t, tmpl);
                     if ( templates.length == 0 ) {
-                        hw.jget( "/" + hw.domain + "/setup?v=2", 'start' );
+                        hw.jget( hw.domain + "/setup?v=2", 'start' );
                         GM_setValue( "loaded", hw.theme + ";" + (new Date()).getHours() );
                     } else {
                         hw.configyure(templates);

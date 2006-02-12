@@ -58,8 +58,8 @@ module Hoodwinkd::Controllers
                 ["password", "password_confirmation"].each {|k| @input.profile.delete(k)}
             end
             @user.attributes = @input.profile
-            if @user.valid?
-                @user.password = encrypt(@user.security_token, @user.password)
+            if @user.valid? and not @input.profile.password.blank?
+                @user.password = encrypt(@user.security_token, @input.profile.password)
                 @user.password_confirmation = nil
             end
             if @user.save
@@ -145,7 +145,7 @@ module Hoodwinkd::Views
                 title { "the winker's satellite office &raquo; " + str }
                 script :language => 'javascript', :src => R(Static, 'js/prototype.js')
                 script :language => 'javascript', :src => R(Static, 'js/support.js')
-                style "@import '#{R(Static, 'css/dial.css')}';", :type => 'text/css'
+                style "@import '#{self / R(Static, 'css/dial.css')}';", :type => 'text/css'
             end
             body do
                 div.shade! do
@@ -210,7 +210,7 @@ module Hoodwinkd::Views
             function editDomain() {
                 var domain = $F('domain');
                 domain = domain.replace( /^www\.(.*)$/, '$1' );
-                window.location = "/dial/site/"+domain;
+                window.location = "#{URL('/dial/site/')}"+domain;
                 return false;
             }
         END

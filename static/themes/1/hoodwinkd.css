@@ -2,7 +2,7 @@ div.hoodwinkSummary {
   float: none;
   position: static;
   display: inline;
-  background: url(http://hoodwink.d/i/hoodwink-summary.png) no-repeat;
+  background: url($R(Static, 'i/hoodwink-summary.png')) no-repeat;
   padding: 0px 8px 6px 24px;
   margin: 0px 0px 0px 4px; 
   font: bold 11px/12px verdana, arial, sans-serif;
@@ -45,12 +45,12 @@ div.hoodwinkSummary a:hover {
 #hoodwinkFullposts img { margin: 0; padding: 0; border: none; }
 #hoodwinkFullposts hr {
   border: none; padding: 1px;
-  background: url(http://hoodwink.d/i/hoodwink-fullpost-tile.png);
+  background: url($R(Static, 'i/hoodwink-fullpost-tile.png'));
 }
 #hoodwinkFullposts .hoodwinkHeader {
   display: block;
   width: 100%;
-  background: url(http://hoodwink.d/i/hoodwink-fullpost-tile.png);
+  background: url($R(Static, 'i/hoodwink-fullpost-tile.png'));
   padding: 0px;
   margin: 4px 0px 0px 0px; 
   height: 33px;
@@ -87,7 +87,7 @@ div.hoodwinkSummary a:hover {
   display: block;
   width: 100%;
   height: 8px;
-  background: url(http://hoodwink.d/i/hoodwink-fullpost-tile.png);
+  background: url($R(Static, 'i/hoodwink-fullpost-tile.png'));
   margin: 4px 0px;
   padding: 0px; 
 }
@@ -218,7 +218,7 @@ padding: 1px 6px 1px 3px;
     padding: 5px;
     margin-left: 8px;
     margin-bottom: 1px;
-    /* background: url(http://hoodwink.d/i/hoodwink-fullpost-rule.png); */
+    /* background: url($R(Static, 'i/hoodwink-fullpost-rule.png')); */
     background-color: #cdd;
     border-bottom: solid 1px #c7c5a7;
     border-left: solid 1px #c7c5a7;

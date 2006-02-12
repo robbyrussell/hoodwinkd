@@ -129,7 +129,7 @@ module Hoodwinkd::Controllers
                 @headers['Content-Type'] = type
                 src = File.read(path)
                 if type =~ %r!^text/!
-                    src.gsub!(/\$(R\(.+?\))/) { eval($1) }
+                    src.gsub!(/\$(R\(.+?\))/) { self / eval($1) }
                 end
                 src
             end
