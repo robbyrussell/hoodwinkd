@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'camping'
+require 'camping/session'
 
 $:.unshift File.dirname(__FILE__)
 Camping.goes :Hoodwinkd
@@ -17,7 +18,24 @@ require 'hoodwinkd/views'
 # extensions to the core
 require 'hoodwinkd/dial'
 
+module Hoodwinkd::UserSession
+    def service(*a)
+        if @state.user_id
+            @user = Hoodwinkd::Models::User.find :first, @state.user_id
+        end
+        @user ||= Hoodwinkd::Models::User.new
+        s = super(*a)
+        p @state
+        s
+    end
+end
+
+module Hoodwinkd
+    include Camping::Session, Hoodwinkd::UserSession
+end
+
 def Hoodwinkd.create
+    Camping::Models::Session.create_schema
     unless Hoodwinkd::Models::Session.table_exists?
         ActiveRecord::Schema.define(&Hoodwinkd::Models.schema)
         Hoodwinkd::Models::Hash.replenish

@@ -1,22 +1,3 @@
-class Hoodwinkd::Controllers::R
-    def initialize(*a)
-        super(*a)
-        return if @env.PATH_INFO =~ %r!^/static/!
-        if @cookies.hoodwinkd_sid
-            @session = Hoodwinkd::Models::Session.find_by_hashid @cookies.hoodwinkd_sid, :include => :user
-        end
-        unless @session
-            @session = Hoodwinkd::Models::Session.generate(@cookies)
-        end
-        @user = @session.user rescue nil
-        @user ||= Hoodwinkd::Models::User.new
-    end
-    def service(*a)
-        s = super(*a)
-        @session.save if @session
-        s
-    end
-end
 
 module Hoodwinkd::Controllers
     class DialSite < R "/dial/site", "/dial/site/(#{DOMAIN})"
@@ -86,12 +67,12 @@ module Hoodwinkd::Controllers
 
     class DialLogout < R '/dial/logout'
         def get
-            @session = Session.generate(@cookies)
+            @state.clear
             redirect DialHome
         end
     end
 
-    class DialHome < R '/'
+    class DialHome < R '/', '/dial'
         def get
             if @user.login
                 redirect DialWelcome
@@ -107,7 +88,7 @@ module Hoodwinkd::Controllers
             if user
                 if @input.password == decrypt( user.security_token, user.password )
                     @user = user
-                    @session.hoodwinkd_user_id = @user.id
+                    @state.user_id = @user.id
                     redirect DialWelcome
                     return
                 else
@@ -122,14 +103,13 @@ module Hoodwinkd::Controllers
 
     class DialRegister < R '/dial/register'
         def post
-            # return div { code( @inp.inspect ); br; code( @input.inspect ) }
             @user = User.new @input.register
             if @user.valid?
                 @user.security_token = Hash.rand
                 @user.password = encrypt(@user.security_token, @user.password)
                 @user.password_confirmation = nil
                 @user.save!
-                @session.hoodwinkd_user_id = @user.id
+                @state.user_id = @user.id
                 redirect DialWelcome
             else
                 render :dial, "register", :register
