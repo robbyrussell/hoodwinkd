@@ -24,9 +24,7 @@ module Hoodwinkd::UserSession
             @user = Hoodwinkd::Models::User.find :first, @state.user_id
         end
         @user ||= Hoodwinkd::Models::User.new
-        s = super(*a)
-        p @state
-        s
+        super(*a)
     end
 end
 
