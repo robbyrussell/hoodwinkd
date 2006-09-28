@@ -1,38 +1,52 @@
-div.hoodwinkSummary {
+/* wink sum */
+span.hoodwinkSummary {
   float: none;
-  position: static;
-  display: inline;
-  background: url($R(Static, 'i/hoodwink-summary.png')) no-repeat;
+  background: url(../../i/hoodwink-summary.png) no-repeat;
+  display: -moz-inline-box;
+  display: inline-block;
+  font: bold 11px/12px verdana, arial, sans-serif;
   padding: 0px 8px 6px 24px;
   margin: 0px 0px 0px 4px; 
-  font: bold 11px/12px verdana, arial, sans-serif;
-  width: 53px;
-  height: 16px;
+  min-width: 40px;
+  min-height: 16px;
 }
-div.hoodwinkSummary a,
-div.hoodwinkSummary a:link,
-div.hoodwinkSummary a:active,
-div.hoodwinkSummary a:visited,
-div.hoodwinkSummary a:hover {
-  float: none;
-  position: static;
-  display: inline;
+span.hoodwinkSummary a,
+span.hoodwinkSummary a:link,
+span.hoodwinkSummary a:active,
+span.hoodwinkSummary a:visited,
+span.hoodwinkSummary a:hover {
   color: #333;
   padding: 0; margin: 0;
-  text-align: right;
-  width: 53px;
+  font: bold 11px/12px verdana, arial, sans-serif;
 }
+
+/* hidden stuff */
+span.hoodwinkSummary.count_0{
+  display: none;
+}
+#hoodwinkFullposts, #hoodwinkContainer, .count_0 #hoodwinkBody, #hoodwinkPreview {
+  height: 0px;
+  overflow: hidden;
+}
+.count_0 #hoodwinkReply {
+  display: none;
+}
+.count_0 #hoodwinkContainer {
+  height: auto;
+}
+
+/* winks all */
 #hoodwinkFullposts {
   display: block;
   border: solid 1px #e7e5c7;
-  background-color: #fffcf5;
+  background-color: #f9fcef;
   color: #333;
   text-align: left;
   text-transform: none;
-  padding: 0px 4px;
-  margin: 4px 0px; 
   line-height: normal;
   min-width: 380px;
+  margin: 4px 0;
+  padding: 0;
   font: normal 11px/12px verdana, arial, sans-serif;
 }
 #hoodwinkFullposts h2, #hoodwinkFullposts h3, #hoodwinkFullposts p, #hoodwinkFullposts legend {
@@ -45,14 +59,14 @@ div.hoodwinkSummary a:hover {
 #hoodwinkFullposts img { margin: 0; padding: 0; border: none; }
 #hoodwinkFullposts hr {
   border: none; padding: 1px;
-  background: url($R(Static, 'i/hoodwink-fullpost-tile.png'));
+  background: url(../../i/hoodwink-fullpost-tile.png);
 }
 #hoodwinkFullposts .hoodwinkHeader {
   display: block;
   width: 100%;
-  background: url($R(Static, 'i/hoodwink-fullpost-tile.png'));
-  padding: 0px;
-  margin: 4px 0px 0px 0px; 
+  background: url(../../i/hoodwink-fullpost-tile.png);
+  padding: 0; margin: 0;
+  padding-bottom: 4px;
   height: 33px;
 }
 #hoodwinkFullposts .hoodwinkIcon {
@@ -78,7 +92,8 @@ div.hoodwinkSummary a:hover {
   height: 24px;
   font-family: verdana, arial, sans-serif;
   font-size: 24px;
-  font-weight: bold;
+  font-weight: normal;
+  font-style: normal;
   text-transform: none;
   padding: 2px 0px 10px 44px;
   margin: 0px; 
@@ -87,8 +102,7 @@ div.hoodwinkSummary a:hover {
   display: block;
   width: 100%;
   height: 8px;
-  background: url($R(Static, 'i/hoodwink-fullpost-tile.png'));
-  margin: 4px 0px;
+  background: url(../../i/hoodwink-fullpost-tile.png);
   padding: 0px; 
 }
 #hoodwinkFullposts .hoodwinkContent a, 
@@ -119,60 +133,57 @@ div.hoodwinkSummary a:hover {
     margin: 0px;
     padding: 0px;
     font-size: 100%;
+    margin: 0 auto;
 }
 
 #hoodwinkContainer form fieldset {
-font-size: 100%;
-border: none;
-border-top: solid 2px #c7c5a7;
-padding: 10px;
-margin: 0px 0px 0px 0px;
-min-width: 340px;
+    font-size: 100%;
+    border: none;
+    border-top: solid 2px #c7c5a7;
+    padding: 10px 20px 10px 10px;
+    margin: 0px 0px 0px 0px;
+    min-width: 340px;
 }
 
 #hoodwinkContainer form fieldset legend {
-font-size: 150%;
-font-weight: normal;
-color: #000000;
-margin: 0px 0px 0px 0px;
-padding: 0px 5px;
+    font-size: 150%;
+    font-weight: normal;
+    color: #979577;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 5px;
 }
 
 #hoodwinkContainer label {
-clear: left;
-font-size: 100%;
-display: block;
-float: left;
-width: 65px;
-padding: 3px 5px;
-margin: 0px 0px 5px 0px;
-text-align: right;
+    clear: left;
+    font-size: 100%;
+    display: block;
+    padding: 2px 0;
+    margin: 0;
 }
 
 #hoodwinkContainer label u {
-font-style: normal;
-text-decoration: underline;
+    font-style: normal;
+    text-decoration: underline;
 }
 
 #hoodwinkContainer form div input, #hoodwinkContainer form div select, #hoodwinkContainer form div textarea {
-width: 200px;
-padding: 1px 3px;
-margin: 0px 0px 0px 0px;
+    font-size: 15px;
+    width: 240px;
+    padding: 1px 3px;
+    margin: 0px 0px 0px 0px;
 }
 
 #hoodwinkContainer form input[type="button"] {
     width: 80px;
-    padding: 0px 0px 0px 0px;
-    margin-left: 75px;
+    padding: 0; margin: 0;
 }
 #hoodwinkContainer form input[type="submit"] {
     width: 100px;
-    padding: 0px 0px 0px 0px;
-    margin: 0px;
+    padding: 0; margin: 0;
 }
 
 #hoodwinkContainer form div textarea {
-width: 260px;
+    width: 100%;
 }
 
 #hoodwinkContainer input, #hoodwinkContainer select, #hoodwinkContainer textarea {
@@ -195,7 +206,6 @@ padding: 1px 6px 1px 3px;
 
 /* winks */
 #hoodwinkFullposts .hoodwinkContents {
-    padding-top: 6px;
     width: 100%;
 }
 #hoodwinkFullposts p.hoodwinkTool { display: inline; }
@@ -208,8 +218,12 @@ padding: 1px 6px 1px 3px;
 }
 
 #hoodwinkFullposts .hoodwinkPost {
-    border-top: solid 2px #c7c5a7;
+    border-top: solid 2px #253;
     min-height: 62px;
+}
+
+#hoodwinkFullposts #hoodwinkReply {
+    padding: 8px 12px;
 }
 
 #hoodwinkFullposts .hoodwinkAttrib {
@@ -218,11 +232,14 @@ padding: 1px 6px 1px 3px;
     padding: 5px;
     margin-left: 8px;
     margin-bottom: 1px;
-    /* background: url($R(Static, 'i/hoodwink-fullpost-rule.png')); */
-    background-color: #cdd;
-    border-bottom: solid 1px #c7c5a7;
-    border-left: solid 1px #c7c5a7;
+    /* background: url(../../i/hoodwink-fullpost-rule.png); */
+    background-color: #e7f5c7;
+    border-bottom: solid 1px #253;
+    border-left: solid 1px #253;
     /* background-color: #f7e587; */
+}
+#hoodwinkFullposts .hoodwinkAttrib:hover {
+    background-color: #f7f5b7;
 }
 #hoodwinkFullposts .hoodwinkAttrib ul { margin: 0; padding: 0; display: none; }
 #hoodwinkFullposts .hoodwinkAttrib li {
@@ -237,9 +254,16 @@ padding: 1px 6px 1px 3px;
     text-align: left;
     line-height: normal;
     padding: 0; margin: 0;
+}
+#hoodwinkFullposts h3.hoodwinkAuthor a {
     font-family: Baskerville, Georgia, "Times New Roman", serif;
-    color: #444;
     font-size: x-large;
+    font-style: normal;
+    font-weight: normal;
+    color: #444;
+}
+#hoodwinkFullposts h3.hoodwinkAuthor a:hover {
+    color: #704;
 }
 
 #hoodwinkFullposts .hoodwinkTime {

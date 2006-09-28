@@ -4,6 +4,7 @@ a:hover { color: #F03; }
     width: 730px;
     margin: 0 auto;
 } 
+a img { border: none; }
 h1, h2, h3, h4, h5, h6 { font-family: Utopia, Georgia, serif; }
 h2, h3, h4, h5, h6 { font-weight: normal; margin: 0; }
 h1 {

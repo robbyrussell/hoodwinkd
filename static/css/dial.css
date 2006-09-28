@@ -20,7 +20,7 @@ h2 {
   font-weight: normal;
 }
 #shade {
-    background: url($R(Static, '/i/winker-satellite.jpg')) 3px 20px no-repeat;
+    background: url(../i/winker-satellite.jpg) 3px 20px no-repeat;
     min-height: 360px;
     position: static;
     width: 460px;
@@ -185,7 +185,7 @@ fieldset input[type="submit"] {
     width:100%; 
     height: 8px; 
     margin-bottom: 8px; 
-    background: url($R(Static, '/i/hoodwink-fullpost-rule.png'));
+    background: url(../i/hoodwink-fullpost-rule.png);
 }
 #pendingSites ul {
     list-style: none;
@@ -203,7 +203,7 @@ fieldset input[type="submit"] {
 }
 a.button {
     font-size: 11px;
-    background: url($R(Static, '/i/hoodwink-fullpost-rule.png'));
+    background: url(../i/hoodwink-fullpost-rule.png);
     padding: 2px 4px;
     line-height: 160%;
 }
@@ -215,7 +215,7 @@ li .summary {
     font-size: 13px;
 }
 #settingTabs {
-background: url($R(Static, '/i/hoodwink-fullpost-tile.png'));
+background: url(../i/hoodwink-fullpost-tile.png);
 border: solid 1px #333;
 }
 
