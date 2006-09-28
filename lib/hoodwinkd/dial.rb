@@ -2,11 +2,9 @@
 module Hoodwinkd::Controllers
     class DialSite < R "/dial/site", "/dial/site/(#{DOMAIN})"
         def load(domain)
-            @site = Site.find_by_domain(domain, :include => :layers) || Site.new
-            if @site.domain
+            @site = Site.find_by_domain(domain, :include => :layers) || Site.new(:domain => domain)
+            if @site.layers
                 @layer = @site.layers[0]
-            else
-                @site.domain = domain
             end
             @layer ||= Layer.new
         end
@@ -16,10 +14,13 @@ module Hoodwinkd::Controllers
         end
         def post(domain)
             self.load(domain)
-            @site.creator_id ||= @user.id
-            @site.save
-            @input.layer.update(:hoodwinkd_site_id => @site.id)
-            @layer.update_attributes(@input.layer)
+            if @site.creator_id.to_i.zero?
+                @site.creator_id = @user.id
+            end
+            if @site.save
+                @input.layer.update(:site_id => @site.id)
+                @layer.update_attributes(@input.layer)
+            end
             render :dial, "editing #{domain}", :site
         end
     end
@@ -74,10 +75,10 @@ module Hoodwinkd::Controllers
 
     class DialHome < R '/', '/dial'
         def get
-            if @user.login
-                redirect DialWelcome
-            else
+            if @user.login.blank?
                 render :dial, "login", :home
+            else
+                redirect DialWelcome
             end
         end
     end
@@ -86,11 +87,12 @@ module Hoodwinkd::Controllers
         def post
             user = User.find_by_login @input.login
             if user
-                if @input.password == decrypt( user.security_token, user.password )
+                if @input.fgot
+                    send_password_reminder_to user
+                elsif @input.password == decrypt( user.security_token, user.password )
                     @user = user
                     @state.user_id = @user.id
-                    redirect DialWelcome
-                    return
+                    return redirect(DialWelcome)
                 else
                     @user.errors.add(:password, 'is incorrect')
                 end
@@ -121,16 +123,17 @@ end
 module Hoodwinkd::Views
     def dial(str, view)
         html do
+            @auto_validation = false
             head do
                 title { "the winker's satellite office &raquo; " + str }
-                script :language => 'javascript', :src => R(Static, 'js/prototype.js')
-                script :language => 'javascript', :src => R(Static, 'js/support.js')
-                style "@import '#{self / R(Static, 'css/dial.css')}';", :type => 'text/css'
+                script :language => 'javascript', :src => R(Static, 'js', 'prototype.js')
+                script :language => 'javascript', :src => R(Static, 'js', 'support.js')
+                style "@import '#{self / R(Static, 'css', 'dial.css')}';", :type => 'text/css'
             end
             body do
                 div.shade! do
                     div.header! do
-                        if @user.login
+                        unless @user.login.blank?
                         div.menu do
                             ul do
                                 li { a 'welcome', :href => R(DialWelcome) }
@@ -203,7 +206,7 @@ module Hoodwinkd::Views
                 div.required do
                     label 'Site Host:', :for => 'domain'
                     input.domain! :type => 'text'
-                    small { red "_Domain or subdomain without 'www.':_ *boingboing.net*, *weblog.rubyonrails.com*" }
+                    small { red "Domain or subdomain without 'www.': *boingboing.net*, *weblog.rubyonrails.com*" }
                 end
                 input.editgo! :type => 'submit', :value => "Add Site"
             end
@@ -275,10 +278,11 @@ module Hoodwinkd::Views
     end
 
     def dial_welcome
+        script :type => "text/javascript", :src => "/js/perfecttime.js"
         self << red(<<-END)
             h1. Welcome, #{@user.login}
 
-            You joined winkerland on <notextile>#{js_time @user.created_at}</notextile>.
+            You joined winkerland on <notextile>#{js_time @user.created_at, 'Day'}</notextile>.
 
             Hoodwink.d is a travelling commentary overlay.  When you visit blogs and websites which have
             been dialed into Hoodwink.d, you'll see the commentary of your fellow winkers.  You are
@@ -333,15 +337,27 @@ module Hoodwinkd::Views
                     n = 'profile[theme_url]'
                     label 'Theme URL:', :for => n
                     input :id => n, :name => n, :type => 'text', :value => @user.theme_url
-                    small { red %{_The web address to a folder containing the theme templates.
+                    small { red %{The web address to a folder containing the theme templates.
                        See "here":http://wasteland.hobix.com/The%20Now/Hoodwink.d%201.6%20is%20Here
-                       for howto make a theme._} }
+                       for howto make a theme.} }
                 end
                 div.optional do
                     n = 'profile[theme_css]'
                     label 'Theme CSS:', :for => n
                     input :id => n, :name => n, :type => 'text', :value => @user.theme_css
-                    small { red %{_If you'd like to override just the CSS for the above theme or the default hoodwink.d theme._} }
+                    small { red %{If you'd like to override just the CSS for the above theme or the default hoodwink.d theme.} }
+                end
+                div.optional do
+                    n = 'profile[nameplate]'
+                    label 'Nameplate:', :for => n
+                    input :id => n, :name => n, :type => 'text', :value => @user.nameplate
+                    small { red %{Rather than an avatar, a background for your name in the wink box.} }
+                end
+                div.optional do
+                    n = 'profile[namehue]'
+                    label 'Name hue:', :for => n
+                    input :id => n, :name => n, :type => 'text', :value => @user.namehue
+                    small { red %{A hex coloring for your name.} }
                 end
                 input.submit_new! :type => 'submit', :value => "Save"
             end
@@ -430,31 +446,31 @@ module Hoodwinkd::Views
                 div.optional do
                     label 'Full Post URL Regexp:', :for => 'layer[fullpost_url_match]'
                     input :type => 'text', :name => 'layer[fullpost_url_match]', :value => @layer.fullpost_url_match
-                    small { red "_Describe the regexp for the a post's permanent URL.  Regexp is not partial,
-                                 beginning and end markers are implied._
+                    small { red "Describe the regexp for the a post's permanent URL.  Regexp is not partial,
+                                 beginning and end markers are implied.
                                  Example: @/\d+/\d+/\d+/[\w-]+\.html@." }
                 end
                 div.optional do
                     label 'Full Post Query Variables:', :for => 'layer[fullpost_qvars]'
                     input :type => 'text', :name => 'layer[fullpost_qvars]', :value => @layer.fullpost_qvars
-                    small { red "_List any query string variables (names separated by commas) which 
-                                 are essential in forming a permalink._
+                    small { red "List any query string variables (names separated by commas) which 
+                                 are essential in forming a permalink.
                                  Example: @id, site@." }
                 end
                 div.optional do
                     label 'Full Post XPath:', :for => 'layer[fullpost_xpath]'
                     input :type => 'text', :name => 'layer[fullpost_xpath]', :value => @layer.fullpost_xpath
-                    small { red "_Paths to element into which the hoodwinks will be injected.  
+                    small { red "Paths to element into which the hoodwinks will be injected.  
                                  Often this will just be the element containing the post itself.  
-                                 *Hoodwinks will be injected into the end of the element.*_
+                                 *Hoodwinks will be injected into the end of the element.*
                                  Example: <code>//div[@class='entry']</code>" }
                 end
                 div.optional do
                     label 'Inline CSS:', :for => 'layer[css]'
                     textarea @layer.css, :name => 'layer[css]'
-                    small { red %{_Per-site CSS.  If the site has ads, see if you can ripoff some CSS from
+                    small { red %{Per-site CSS.  If the site has ads, see if you can ripoff some CSS from
                                 "Greasemonkeyed":http://greasemonkeyed.com/.  *No HTML in here!*  (And keep
-                                the CSS short, it gets transferred on every request.)_} }
+                                the CSS short, it gets transferred on every request.)} }
                 end
             end
             input.submit_new! :type => 'submit', :value => 'save'

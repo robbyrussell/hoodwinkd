@@ -34,3 +34,4 @@ if (typeof(TrimPath) != 'undefined') {
         return new Date(t).strftime(fmt);
     }
 }
+

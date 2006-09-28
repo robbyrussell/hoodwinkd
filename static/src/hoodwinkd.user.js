@@ -231,15 +231,16 @@
 //
 //
 // ==UserScript==
-// @name          Hoodwink'd!!
-// @namespace     http://hoodwink.hobix.com/
+// @name          Hoodwink'd!! (on http:<%= self.URL %>)
+// @namespace     http:<%= self.URL %>
 // @description   Caulks the corners of blogs with discreet comment'ry.
 // @include       http://*
-// @version       1.8.2c
+// @version       1.9
 
 // ==/UserScript ==
 
 // CHANGELOG:
+// - 1.9: live preview, nameplates, user.onLoad.
 // - 1.8.2c: provide indexOf method for less than Firefox 1.5
 // - 1.8.2b: minor fix, remove escaping from stripURL.
 // - 1.8.2: greedy qvar operator
@@ -710,14 +711,19 @@ var TrimPath;
     var HoodWink = {
 
         login: "<%= @user.login %>", key: "<%= @user.security_token %>",
-        css: '', version: 1.821,
-        theme: '<%= URL(Static, "themes/1/") %>',
-        server: '<%= self.URL %>',
+        css: '<%= @user.theme_css %>', version: 1.9,
+        theme: '<%= @user.theme_url %>',
+        server: 'http:<%= self.URL %>',
+        nameplate: "<%= @user.nameplate %>",
+        namehue: "<%= @user.namehue %>",
 
         // load site information
-        d: function ( loc ) {
+        d: function ( win ) {
+            if ( win.document.contentType.indexOf('html') < 0 ) return;
+            var loc = win.location;
             this.domain = loc.host.replace( /^www\./, '' );
             this.location = loc;
+            if ( this.theme == '' ) this.theme = 'http:<%= URL(Static, "themes", "1") %>';
             if ( this.css == '' ) this.css = this.theme + '/hoodwinkd.css';
             if ( this.domain == "<%= @env.HTTP_HOST %>" && this.location.pathname.match( /^\/[^\/\.]+\.[^\/\.]+/ ) ) return;
             this.search = loc.search;
@@ -847,7 +853,7 @@ var TrimPath;
             var permabrother = null;
             var tmpl = TrimPath.parseTemplate(GM_getValue('template:winksall'));
             this.injectCSS( site['css'] );
-            this.injectScript( '<%= URL(Static, "js/rijndael.js") %>' );
+            this.injectScript( 'http:<%= URL(Static, "js", "rijndael.js") %>' );
             posts = this.xp( site['fullpost_xpath'], document );
             site['fullpost_eles'] = posts.snapshotLength;
             for (var i=0; i<posts.snapshotLength; i++)
@@ -880,6 +886,9 @@ var TrimPath;
                     winksum.innerHTML = winksall.innerHTML;
                 else
                     posted.innerHTML += "<div id='hoodwinkFullposts'>" + winksall.innerHTML + "</div>";
+                if (data.user.onLoad) {
+                    data.user.onLoad(this.domain, site['hoodlink'], this.login, this.key, function(a,b,c) { data.user.preview(a,b,c); });
+                }
                 site['fullpost_links']++;
             }
         },
@@ -887,7 +896,7 @@ var TrimPath;
         jget: function ( url, callback, params ) {
             var self = this;
             GM_xmlhttpRequest({
-                method: 'GET', url: "<%= self.URL %>" + url,
+                method: 'GET', url: "http:<%= self.URL %>" + url,
                 // headers: {'Content-type': 'application/x-json'},  // tickles GM+prototype conflict
                 // data: ( obj == null ? null : JSON.stringify( obj ) ),
                 onload: function(e) { eval('var obj = ' + e.responseText); self[callback](obj, params); }
@@ -960,6 +969,23 @@ var TrimPath;
             return this.xp( xpath, ele ).snapshotItem( 0 );
         },
 
+        // Preview
+        preview: function( event, target, txt ) {
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: this.server + "test.com/preview?u=" + this.login + "&amp;c=" + encodeURIComponent(txt),
+                onload: function(req) {
+                  if (req.readyState == 4) { // only if req is "loaded"
+                    if (req.status == 200) { // only if "OK"
+                      target.innerHTML = req.responseText;
+                    } else {
+                      target.innerHTML="hoodwink_ahah error:\n"+req.statusText;
+                    }
+                  }
+                }
+            });
+        },
+
         // Load templates
         make_node: function ( tpl, data ) {
             var ele = document.createElement('div');
@@ -969,7 +995,7 @@ var TrimPath;
 
         loadSupport: function () {
             GM_xmlhttpRequest({
-                method: 'GET', url: '<%= URL(Static, "js/support.js") %>',
+                method: 'GET', url: 'http:<%= URL(Static, "js", "support.js") %>',
                 onload: function(e) { 
                     eval( e.responseText );
                 }
@@ -984,7 +1010,7 @@ var TrimPath;
             }
             var hw = this;
             var t = templates.pop();
-            var url = this.theme + "template-" + t + ".html";
+            var url = this.theme + "/template-" + t + ".html";
             GM_xmlhttpRequest({
                 method: 'GET', url: url + "?" + (new Date()).getMilliseconds(),
                 onload: function(e) { 
@@ -1006,6 +1032,6 @@ var TrimPath;
         }
     }
 
-    HoodWink.d( window.location );
+    HoodWink.d( window );
 
 })();

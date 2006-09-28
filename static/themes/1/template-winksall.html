@@ -1,29 +1,52 @@
 <div id="hoodwinkFullposts">
-{if user.version != 1.821}
+<div class="count_${winks.length}">
+{if user.version < 1.9}
 <div class="alert">
-    <p><strong>Hoodwink'd 1.8.2b is out!</strong> Please take a moment <a href="${user.server}static/js/hoodwinkd.user.js">to upgrade</a>.  This version fixes the problems with plunder'd URLs we're seeing on Google and Wasteland.</p>
+    <p><strong>Hoodwink'd 1.9 is here!</strong> Please take a moment <a href="${user.server}dial/hoodwinkd.user.js">to upgrade</a>.  Please uninstall the Hoodwink'd script completely this time before upgrading!</p>
 </div>
 {/if}
 <a name='hoodwinks'></a>
-<div class='hoodwinkHeader'>
-<div class='hoodwinkTotal'><p>${winks.length} others have commented.</p>
-<p><a href='#hoodwinkNew'>Click here</a> to reply.</p></div>
-<div class='hoodwinkIcon'><img src='${user.server}static/i/hoodwink-fullpost-icon.png' /></div>
-<h2 class='hoodwinkTitle'>hoodwink'd</h2></div><div class='hoodwinkContents'>
-
-{for wink in winks}
-{if wink.user}
-    <a name="${wink.user}@${% wink.created_at %}"></a>
-    <div class='hoodwinkPost'>
-        <div class='hoodwinkAttrib'>
-            <h3 class='hoodwinkAuthor'>${wink.user}</h3>
-            <h4 class='hoodwinkTime'>said on ${wink.created_at.strftime("%d %b %Y at %I:%M:%S %p")}</h4>
-        </div>
-        <div class='hoodwinkContour'><div class='hoodwinkContent'>${wink.comment}</div></div>
+<div class='hoodwinkHeader' id='hoodwinkHeader'>
+    <div class='hoodwinkTotal'>
+        <p>${winks.length} others have commented.</p>
+        <p><a href='javascript:void(0);'>Click here</a> to read.</p>
     </div>
-{/if}
-{/for}
+    <div class='hoodwinkIcon'><img src='${user.server}static/i/hoodwink-fullpost-icon.png' /></div>
+    <h2 class='hoodwinkTitle'>hoodwink'd</h2>
+</div>
+<div id='hoodwinkBody'>
+<div class='hoodwinkContents'>
 
+    {for wink in winks}
+    {if wink.user}
+        <div class='hoodwinkPost' id="${wink.user}@${wink.created_at.getTime()/1000}">
+            <div class='hoodwinkAttrib'
+                style="{if wink.nameplate}background:url(${wink.nameplate}) top left;{/if}"
+            >
+            <h3 class='hoodwinkAuthor'
+                ><a style='{if wink.namehue}color:${wink.namehue};{/if}' href="http://hoodwink.d/${wink.user}">${wink.user}</a></h3>
+                <h4 style='{if wink.namehue}color:${wink.namehue};{/if}' class='hoodwinkTime'>said on ${wink.created_at.strftime("%d %b %Y at %H:%M:%S")}</h4>
+            </div>
+            <div class='hoodwinkContour'><div class='hoodwinkContent'>${wink.comment}</div></div>
+        </div>
+    {/if}
+    {/for}
+
+    <div id="hoodwinkPreview">
+    <div class="hoodwinkPost">
+        <div class='hoodwinkAttrib'
+            style="{if user.nameplate}background:url(${user.nameplate}) top left;{/if}"
+        >
+        <h3 class='hoodwinkAuthor'
+            ><a style='{if user.namehue}color:${user.namehue};{/if}' href="http://hoodwink.d/${user.login}">${user.login}</a></h3>
+            <h4 style='{if user.namehue}color:${user.namehue};{/if}' class='hoodwinkTime'>said on ${(new Date()).strftime("%d %b %Y at %H:%M:%S")}</h4>
+        </div>
+        <div class='hoodwinkContour'><div class='hoodwinkContent'><div id="hoodwinkPreviewHtml">
+                    <em>Loading preview...</em>
+                    </div></div></div>
+    </div>
+    </div>
+    <div id='hoodwinkReply'><a href="javascript:void(0);" id="hoodwinkReplyLink">Click here</a> to reply.</div>
 </div>
 <div id='hoodwinkContainer'>
 <a name='hoodwinkNew'></a>
@@ -33,18 +56,65 @@
 <input type='hidden' name='hoodwink_passc' value='' />
 <input type='hidden' name='hoodwink_login' value='${user.login}' />
 <fieldset><legend>post a comment</legend><div class='required'>
-    <label for='hoodwink_login'>name:</label>
+    <label for='hoodwink_login'>name</label>
     <input type='text' name='hoodwink_login' value='${user.login}' disabled='true' />
 </div><div class='required'>
-    <label for='hoodwink_pass'>password:</label>
+    <label for='hoodwink_pass'>password</label>
     <input type='password' name='hoodwink_pass' value='' />
 </div><div class='required'>
-    <label for='hoodwink_writer'>comment:</label>
-    <textarea name='hoodwink_writer' rows='12'></textarea>
+    <label for='hoodwink_writer'>comment</label>
+    <textarea id='hoodwink_writer' name='hoodwink_writer' rows='6'></textarea>
 </div>
-<input type='button' onClick='window.open( "${user.server}${user.domain}/preview?u=${user.login}&amp;c="+escape(this.form.elements["hoodwink_writer"].value ), 
-    "hWP", "height=400,width=400,channelmode=0,dependent=0,directories=0,fullscreen=0,location=0,menubar=0,resizable=0,scrollbars=1,status=1,toolbar=0","pop" );' value='preview' />
+<input type='button' id='hoodwinkPreviewButton' value='preview' />
 <input type='submit' name='winkNOW' value='post this wink' /></fieldset></form>
+</div>
 <div class='hoodwinkRule'></div>
 </div>
 </div>
+</div>
+
+{if user}{eval}
+user.onLoad = function( domain, link, username, key, previewFunc ){
+var Class = { create: function() { return function() { this.initialize.apply(this, arguments);}
+}
+}
+Object.extend = function(destination, source) { for (property in source) destination[property] = source[property]; return destination;}
+Function.prototype.bind = function(object) { var __method = this; return function() { return __method.apply(object, arguments);}
+}
+Function.prototype.bindAsEventListener = function(object) { var __method = this; return function(event) { __method.call(object, event || window.event);}
+}
+function $() { if (arguments.length == 1) return get$(arguments[0]); var elements = []; $c(arguments).each(function(el){ elements.push(get$(el));}); return elements; function get$(el){ if (typeof el == 'string') el = document.getElementById(el); return el;}
+}
+var Element = new Object(); Object.extend(Element, { remove: function(element) { element = $(element); element.parentNode.removeChild(element);}, hasClassName: function(element, className) { element = $(element); if (!element) return; var hasClass = false; element.className.split(' ').each(function(cn){ if (cn == className) hasClass = true;}); return hasClass;}, addClassName: function(element, className) { element = $(element); Element.removeClassName(element, className); element.className += ' ' + className;}, removeClassName: function(element, className) { element = $(element); if (!element) return; var newClassName = ''; element.className.split(' ').each(function(cn, i){ if (cn != className){ if (i > 0) newClassName += ' '; newClassName += cn;}
+}); element.className = newClassName;}, cleanWhitespace: function(element) { element = $(element); $c(element.childNodes).each(function(node){ if (node.nodeType == 3 && !/\S/.test(node.nodeValue)) Element.remove(node);});}, find: function(element, what) { element = $(element)[what]; while (element.nodeType != 1) element = element[what]; return element;}
+}); var Position = { cumulativeOffset: function(element) { var valueT = 0, valueL = 0; do { valueT += element.offsetTop || 0; valueL += element.offsetLeft || 0; element = element.offsetParent;} while (element); return [valueL, valueT];}
+}; document.getElementsByClassName = function(className) { var children = document.getElementsByTagName('*') || document.all; var elements = []; $c(children).each(function(child){ if (Element.hasClassName(child, className)) elements.push(child);}); return elements;}
+Array.prototype.iterate = function(func){ for(var i=0;i<this.length;i++) func(this[i], i);}
+if (!Array.prototype.each) Array.prototype.each = Array.prototype.iterate; function $c(array){ var nArray = []; for (var i=0;i<array.length;i++) nArray.push(array[i]); return nArray;}
+var fx = new Object(); fx.Base = function(){}; fx.Base.prototype = { setOptions: function(options) { this.options = { duration: 500, onComplete: '', transition: fx.sinoidal
+}
+Object.extend(this.options, options || {});}, step: function() { var time = (new Date).getTime(); if (time >= this.options.duration+this.startTime) { this.now = this.to; clearInterval (this.timer); this.timer = null; if (this.options.onComplete) setTimeout(this.options.onComplete.bind(this), 10);}
+else { var Tpos = (time - this.startTime) / (this.options.duration); this.now = this.options.transition(Tpos) * (this.to-this.from) + this.from;}
+this.increase();}, custom: function(from, to) { if (this.timer != null) return; this.from = from; this.to = to; this.startTime = (new Date).getTime(); this.timer = setInterval (this.step.bind(this), 13);}, hide: function() { this.now = 0; this.increase();}, clearTimer: function() { clearInterval(this.timer); this.timer = null;}
+}
+fx.Layout = Class.create(); fx.Layout.prototype = Object.extend(new fx.Base(), { initialize: function(el, options) { this.el = $(el); this.el.style.overflow = "hidden"; this.iniWidth = this.el.offsetWidth; this.iniHeight = this.el.offsetHeight; this.setOptions(options);}
+}); fx.Height = Class.create(); Object.extend(Object.extend(fx.Height.prototype, fx.Layout.prototype), { increase: function() { this.el.style.height = this.now + "px";}, toggle: function() { if (this.el.offsetHeight > 0) this.custom(this.el.offsetHeight, 0); else this.custom(0, this.el.scrollHeight);}
+}); fx.Width = Class.create(); Object.extend(Object.extend(fx.Width.prototype, fx.Layout.prototype), { increase: function() { this.el.style.width = this.now + "px";}, toggle: function(){ if (this.el.offsetWidth > 0) this.custom(this.el.offsetWidth, 0); else this.custom(0, this.iniWidth);}
+}); fx.Opacity = Class.create(); fx.Opacity.prototype = Object.extend(new fx.Base(), { initialize: function(el, options) { this.el = $(el); this.now = 1; this.increase(); this.setOptions(options);}, increase: function() { if (this.now == 1 && (/Firefox/.test(navigator.userAgent))) this.now = 0.9999; this.setOpacity(this.now);}, setOpacity: function(opacity) { if (opacity == 0 && this.el.style.visibility != "hidden") this.el.style.visibility = "hidden"; else if (this.el.style.visibility != "visible") this.el.style.visibility = "visible"; if (window.ActiveXObject) this.el.style.filter = "alpha(opacity=" + opacity*100 + ")"; this.el.style.opacity = opacity;}, toggle: function() { if (this.now > 0) this.custom(1, 0); else this.custom(0, 1);}
+}); fx.sinoidal = function(pos){ return ((-Math.cos(pos*Math.PI)/2) + 0.5);}
+fx.linear = function(pos){ return pos;}
+fx.cubic = function(pos){ return Math.pow(pos, 3);}
+fx.circ = function(pos){ return Math.sqrt(pos);}
+var slidePreview = new fx.Height($('hoodwinkPreview'), { duration: 500, onComplete: function() { if ($('hoodwinkPreview').style.height != '0px'); $('hoodwinkPreview').style.height = 'auto';}});
+var previewOpen = false;
+$('hoodwinkPreviewButton').addEventListener('click', 
+    function(e) {
+        if ( !previewOpen ) { slidePreview.toggle(); previewOpen = true }
+        previewFunc(e, $('hoodwinkPreviewHtml'), $('hoodwink_writer').value);
+    },
+    false);
+var slideWinksAndForm = new fx.Height($('hoodwinkBody'), { duration: 500, onComplete: function() { if ($('hoodwinkBody').style.height != '0px'); $('hoodwinkBody').style.height = 'auto';}}); $('hoodwinkHeader').addEventListener('click', function() { slideWinksAndForm.toggle();}, false); if (winks.length) { $('hoodwinkContainer').style.height = '0px'; var slideForm = new fx.Height($('hoodwinkContainer'), { duration: 500
+}); $('hoodwinkReplyLink').addEventListener('click', function() { $('hoodwinkReply').style.display = 'none'; slideForm.toggle(0, $('hoodwinkContainer').scrollHeight);}, false);} else { $('hoodwinkBody').style.height = '0px';}
+var slideEverythingDuration = Math.min(Math.max($('hoodwinkFullposts').scrollHeight, 500), 2000); var slideEverything = new fx.Height($('hoodwinkFullposts'), { duration: slideEverythingDuration, onComplete: function() { $('hoodwinkFullposts').style.height = 'auto';}
+}); slideEverything.toggle(0, $('hoodwinkFullposts').scrollHeight);}
+{/eval}{/if}
