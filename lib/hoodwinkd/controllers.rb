@@ -124,13 +124,15 @@ module Hoodwinkd::Controllers
                 html = red( @input.hoodwink_writer )
                 @wink = Wink.create :post_id => @post.id, :user_id => @user.id,
                     :comment_plain => @input.hoodwink_writer, :comment_html => html
-                @post.wink_count += 1
-                if @post.first_wink_id.to_i == 0
-                    @post.first_wink_id = @wink.id
+                if @wink.errors.empty?
+                    @post.wink_count += 1
+                    if @post.first_wink_id.to_i == 0
+                        @post.first_wink_id = @wink.id
+                    end
+                    @post.last_wink_id = @wink.id
+                    @post.save
+                    redirect "http://#{ domain }#{ @permalink }"
                 end
-                @post.last_wink_id = @wink.id
-                @post.save
-                redirect "http://#{ domain }#{ @permalink }"
             end
         end
     end
@@ -140,15 +142,8 @@ module Hoodwinkd::Controllers
             path = File.join(STATIC, dir, path.gsub(/\.+/, '.'))
             type = MIME_TYPES[path[/\.\w+$/, 0]] || "text/plain"
             @headers['Content-Type'] = type
-            realpath = path + ".d"
-            if File.exists? realpath
-                src = File.read(realpath)
-                if type =~ %r!^text/!
-                    src.gsub!(/\$(R\(.+?\))/) { self / eval($1) }
-                end
-                src
-            elsif File.exists? path
-                File.read(path)
+            if File.exists? path
+                @headers['X-Sendfile']= path
             end
         end
     end

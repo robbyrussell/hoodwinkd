@@ -44,7 +44,7 @@ span.hoodwinkSummary.count_0{
   text-align: left;
   text-transform: none;
   line-height: normal;
-  min-width: 380px;
+  min-width: 400px;
   margin: 4px 0;
   padding: 0;
   font: normal 11px/12px verdana, arial, sans-serif;
@@ -108,12 +108,16 @@ span.hoodwinkSummary.count_0{
 #hoodwinkFullposts .hoodwinkContent a, 
 #hoodwinkFullposts .hoodwinkContent a:link, 
 #hoodwinkFullposts .hoodwinkContent a:visited,
+#hoodwinkFullposts #hoodwinkReply a, 
+#hoodwinkFullposts #hoodwinkReply a:link, 
+#hoodwinkFullposts #hoodwinkReply a:visited,
 #hoodwinkFullposts .hoodwinkHeader a, 
 #hoodwinkFullposts .hoodwinkHeader a:link, 
 #hoodwinkFullposts .hoodwinkHeader a:visited {
   color: #036;
   padding: 2px 3px; margin: -2px -3px;
 }
+#hoodwinkFullposts #hoodwinkReply a:hover,
 #hoodwinkFullposts .hoodwinkContent a:hover,
 #hoodwinkFullposts .hoodwinkHeader a:hover {
   color: white;
@@ -129,6 +133,17 @@ span.hoodwinkSummary.count_0{
 /* form */
 #hoodwinkContainer {
 }
+#hoodwinkHowto {
+    float: right;
+    margin: 0px 2px;
+    padding: 0;
+} 
+#hoodwinkHowto table,
+#hoodwinkHowto tr,
+#hoodwinkHowto td {
+    font-size: 11px;
+    margin: 0; padding: 0;
+}
 #hoodwinkContainer form {
     margin: 0px;
     padding: 0px;
@@ -142,7 +157,7 @@ span.hoodwinkSummary.count_0{
     border-top: solid 2px #c7c5a7;
     padding: 10px 20px 10px 10px;
     margin: 0px 0px 0px 0px;
-    min-width: 340px;
+    min-width: 380px;
 }
 
 #hoodwinkContainer form fieldset legend {
@@ -168,7 +183,7 @@ span.hoodwinkSummary.count_0{
 
 #hoodwinkContainer form div input, #hoodwinkContainer form div select, #hoodwinkContainer form div textarea {
     font-size: 15px;
-    width: 240px;
+    width: 130px;
     padding: 1px 3px;
     margin: 0px 0px 0px 0px;
 }
@@ -237,9 +252,6 @@ padding: 1px 6px 1px 3px;
     border-bottom: solid 1px #253;
     border-left: solid 1px #253;
     /* background-color: #f7e587; */
-}
-#hoodwinkFullposts .hoodwinkAttrib:hover {
-    background-color: #f7f5b7;
 }
 #hoodwinkFullposts .hoodwinkAttrib ul { margin: 0; padding: 0; display: none; }
 #hoodwinkFullposts .hoodwinkAttrib li {

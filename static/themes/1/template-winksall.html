@@ -50,12 +50,41 @@
 </div>
 <div id='hoodwinkContainer'>
 <a name='hoodwinkNew'></a>
-<form name='hoodwinkd' method='POST' action='${user.server}${user.domain}/wink${hoodlink}'
+<form name='hoodwinkd' method='POST' action="${user.server}${user.domain}/wink${hoodlink}"
     onSubmit='this.elements["hoodwink_passc"].value = byteArrayToHex(rijndaelEncrypt(this.elements["hoodwink_pass"].value,hexToByteArray("${user.key}"),"CBC")); 
               this.elements["hoodwink_pass"].value = ""; return this.submit();'>
 <input type='hidden' name='hoodwink_passc' value='' />
 <input type='hidden' name='hoodwink_login' value='${user.login}' />
-<fieldset><legend>post a comment</legend><div class='required'>
+<fieldset><legend>post a comment</legend>
+<div id='hoodwinkHowto'>
+    <table border="0" cellspacing="5" cellpadding="0">
+    <tr>
+        <td>*bold*</td>
+        <td>&rarr;</td>
+        <td><strong>bold</strong></td>
+    </tr>
+    <tr>
+        <td>_emphasized_</td>
+        <td>&rarr;</td>
+        <td><em>emphasized</em></td>
+    </tr>
+    <tr>
+        <td>"link":http://hoodwink.d/</td>
+        <td>&rarr;</td>
+        <td><a href="http://hoodwink.d/">link</a></td>
+    </tr>
+    <tr>
+        <td>!hoodwink.png!</td>
+        <td>&rarr;</td>
+        <td><img src="http://hoodwink.d/i/hoodwink-summary.png" /></td>
+    </tr>
+    <tr>
+        <td colspan="3">Beyond that: <a href='javascript:void(0);' onClick='window.open("http://hobix.com/textile/quick.html",
+            "redRef", "height=600,width=550,channelmode=0,dependent=0,directories=0,fullscreen=0,location=0,menubar=0," +
+            "resizable=0,scrollbars=1,status=1,toolbar=0");'>the RedCloth reference</a>.</td>
+    </tr>
+    </table>
+</div><div class='required'>
     <label for='hoodwink_login'>name</label>
     <input type='text' name='hoodwink_login' value='${user.login}' disabled='true' />
 </div><div class='required'>
@@ -113,8 +142,8 @@ $('hoodwinkPreviewButton').addEventListener('click',
         previewFunc(e, $('hoodwinkPreviewHtml'), $('hoodwink_writer').value);
     },
     false);
-var slideWinksAndForm = new fx.Height($('hoodwinkBody'), { duration: 500, onComplete: function() { if ($('hoodwinkBody').style.height != '0px'); $('hoodwinkBody').style.height = 'auto';}}); $('hoodwinkHeader').addEventListener('click', function() { slideWinksAndForm.toggle();}, false); if (winks.length) { $('hoodwinkContainer').style.height = '0px'; var slideForm = new fx.Height($('hoodwinkContainer'), { duration: 500
+var slideWinksAndForm = new fx.Height($('hoodwinkBody'), { duration: 500, onComplete: function() { if ($('hoodwinkBody').style.height != '0px') { $('hoodwinkBody').style.height = 'auto';}}}); $('hoodwinkHeader').addEventListener('click', function() { slideWinksAndForm.toggle();}, false); if (winks.length) { $('hoodwinkContainer').style.height = '0px'; var slideForm = new fx.Height($('hoodwinkContainer'), { duration: 500
 }); $('hoodwinkReplyLink').addEventListener('click', function() { $('hoodwinkReply').style.display = 'none'; slideForm.toggle(0, $('hoodwinkContainer').scrollHeight);}, false);} else { $('hoodwinkBody').style.height = '0px';}
-var slideEverythingDuration = Math.min(Math.max($('hoodwinkFullposts').scrollHeight, 500), 2000); var slideEverything = new fx.Height($('hoodwinkFullposts'), { duration: slideEverythingDuration, onComplete: function() { $('hoodwinkFullposts').style.height = 'auto';}
+var slideEverythingDuration = Math.min(Math.max($('hoodwinkFullposts').scrollHeight, 500), 2000); var slideEverything = new fx.Height($('hoodwinkFullposts'), { duration: slideEverythingDuration, onComplete: function() {$('hoodwinkFullposts').style.height = 'auto';}
 }); slideEverything.toggle(0, $('hoodwinkFullposts').scrollHeight);}
 {/eval}{/if}
