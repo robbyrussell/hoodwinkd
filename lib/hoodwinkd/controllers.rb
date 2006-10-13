@@ -131,7 +131,7 @@ module Hoodwinkd::Controllers
                     end
                     @post.last_wink_id = @wink.id
                     @post.save
-                    redirect "http://#{ domain }#{ @permalink }"
+                    r 302,'','Location'=>"http://#{ domain }#{ @permalink }"
                 end
             end
         end

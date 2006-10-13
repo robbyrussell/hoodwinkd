@@ -50,9 +50,22 @@
 </div>
 <div id='hoodwinkContainer'>
 <a name='hoodwinkNew'></a>
-<form name='hoodwinkd' method='POST' action="${user.server}${user.domain}/wink${hoodlink}"
-    onSubmit='this.elements["hoodwink_passc"].value = byteArrayToHex(rijndaelEncrypt(this.elements["hoodwink_pass"].value,hexToByteArray("${user.key}"),"CBC")); 
-              this.elements["hoodwink_pass"].value = ""; return this.submit();'>
+<form name='hoodwinkd' method='POST' action="${user.server}${user.domain}/wink${hoodlink}" onSubmit="
+    var errors = [];
+    if (!this.elements['hoodwink_pass'].value) {
+        errors.push('Please enter your password.');
+    }
+    if (!this.elements['hoodwink_writer'].value) {
+        errors.push('You have not written a thing.');
+    }
+    if (errors.length > 0) {
+        alert('* ' + errors.join('\n* '));
+        return false;
+    }
+    this.elements['hoodwink_passc'].value = byteArrayToHex(
+        rijndaelEncrypt(this.elements['hoodwink_pass'].value,hexToByteArray('${user.key}'),'CBC')); 
+    this.elements['hoodwink_pass'].value = '';
+    return this.submit();">
 <input type='hidden' name='hoodwink_passc' value='' />
 <input type='hidden' name='hoodwink_login' value='${user.login}' />
 <fieldset><legend>post a comment</legend>
