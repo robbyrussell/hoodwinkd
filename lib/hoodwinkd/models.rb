@@ -124,6 +124,23 @@ module Hoodwinkd::Models
                 GROUP BY s.id ORDER BY s.created_at DESC, s.id ASC LIMIT #{count.to_i}
             }
         end
+        def self.globs(domain)
+            parts = domain.split('.')
+            [domain] + (1..parts.length-1).map { |x| "*.#{parts[x..-1].join('.')}" }
+        end
+        def self.find_setup(domain)
+            layers = nil
+            globs(domain).each do |gdom|
+                layers = 
+                    Site.find_by_sql [<<-END, gdom]
+                        SELECT s.*, l.name, l.fullpost_qvars, l.css, l.fullpost_xpath, l.fullpost_url_match
+                        FROM hoodwinkd_sites s, hoodwinkd_layers l
+                        WHERE s.domain = ? AND l.site_id = s.id AND l.fullpost_xpath IS NOT NULL
+                    END
+                break unless layers.blank?
+            end
+            layers
+        end
     end
     class AliasedSite < Site; end
     class LinkedSite < Site; end

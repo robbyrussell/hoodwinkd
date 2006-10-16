@@ -6,7 +6,7 @@ module Hoodwinkd::Controllers
             if @site.layers
                 @layer = @site.layers[0]
             end
-            @layer ||= Layer.new
+            @layer ||= Layer.new(:name => 'Root')
         end
         def get(domain)
             self.load(domain)

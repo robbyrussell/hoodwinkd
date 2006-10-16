@@ -5,15 +5,22 @@ require 'camping/session'
 $:.unshift File.dirname(__FILE__)
 Camping.goes :Hoodwinkd
 
-DOMAIN = '[\w\-\.]+\.\w+'
+DOMAIN = '[\w\-\*\.]+\.\w+'
 STATIC = File.expand_path('../../static', __FILE__)
 SALT = ""
 
 require 'mimetypes_hash'
+
+# the raw guts
 require 'hoodwinkd/helpers'
 require 'hoodwinkd/models'
 require 'hoodwinkd/controllers'
 require 'hoodwinkd/views'
+
+# the niceties
+require 'hoodwinkd/dial'
+require 'hoodwinkd/onslaught'
+require 'hoodwinkd/summaries'
 
 module Hoodwinkd::UserSession
     def service(*a)

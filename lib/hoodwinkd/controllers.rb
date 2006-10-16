@@ -11,13 +11,7 @@ module Hoodwinkd::Controllers
 
     class Setup < R "/(#{DOMAIN})/setup"
         def get(domain)
-            layers = 
-                Site.find_by_sql [<<-END, domain]
-                    SELECT l.name, l.fullpost_qvars, l.css, l.fullpost_xpath, l.fullpost_url_match,
-                           s.domain, s.enabled, s.created_at
-                    FROM hoodwinkd_sites s, hoodwinkd_layers l
-                    WHERE s.domain = ? AND l.site_id = s.id
-                END
+            layers = Site.find_setup(domain)
             output_json(layers) do |layer| 
                 layer['fullpost_qvars'] = layer['fullpost_qvars'].to_s.split(/\s*,\s+/)
             end
@@ -105,6 +99,11 @@ module Hoodwinkd::Controllers
             @permalink = url_canonize(permalink, @env['QUERY_STRING'])
             pass_in = decrypt( @user.security_token, @input.hoodwink_passc[32,32], @input.hoodwink_passc[0,32] )
             if pass_in == decrypt( @user.security_token, @user.password )
+                layer = Site.find_setup(domain).first
+                if layer.domain != domain
+                    site = AliasedSite.create(:creator_id => @user.id, :domain => domain, :linked_site => layer)
+                    linklayer = Layer.create(:site => site, :name => '-')
+                end
                 @post = Post.find_by_sql([<<-END, domain, @permalink]).first
                     SELECT p.*, IFNULL(s.real_domain, s.domain) AS real_domain
                      FROM hoodwinkd_posts p, hoodwinkd_layers l, hoodwinkd_sites s
